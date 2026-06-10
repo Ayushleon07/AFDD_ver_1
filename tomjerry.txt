@@ -1,2 +1,6 @@
 tommy is a good cat and jerry is a bad boy but tom and jerry is the best cartoon 
+<<<<<<< HEAD
 aman is a fast write. aman is ghost rider. aman is spider man. aman is bat man. aman loves alia bhat
+=======
+varun lives on land.
+>>>>>>> 47636c878971d945f165c60c0cef0fa5c17caae0
