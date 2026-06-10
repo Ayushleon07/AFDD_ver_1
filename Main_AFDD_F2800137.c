@@ -34,10 +34,10 @@ bool flag = false;
 Uint16 fft_index = 0;
 bool fft_ready = false;
 float Energy = 0.0f;
-bool Reset = true;
+bool Reset = false;
 bool Arc = false;
 Uint32 arc_ctr = 0;
-float Max_energy = 0.0f;
+float Max_energy = 10.0f;
 
 
 void main(void)
