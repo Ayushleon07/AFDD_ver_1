@@ -1,0 +1,22 @@
+# CCS build folders
+Debug/
+Release/
+
+# CCS metadata
+.metadata/
+.launches/
+targetConfigs/
+
+# Eclipse / CCS files
+.cproject
+.project
+.ccsproject
+
+# SysConfig generated files
+.syscfg-generated/
+
+# OS / Editor junk
+*.log
+*.tmp
+*.swp
+.DS_Store
