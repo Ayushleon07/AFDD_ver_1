@@ -8,8 +8,8 @@
 #ifndef FFT_H_
 #define FFT_H_
 
+#include <AFDD.h>
 #include <math.h>
-#include <ABC.h>
 
 /* ================= FFT CONFIGURATION ================= */
 

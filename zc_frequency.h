@@ -1,8 +1,8 @@
 #ifndef ZCFREQUENCY_H
 #define ZCFREQUENCY_H
 
+#include <AFDD.h>
 #include <stdint.h>
-#include <ABC.h>
 
 /* ===== USER CONFIG ===== */
 
