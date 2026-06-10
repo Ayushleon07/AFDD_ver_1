@@ -2,6 +2,7 @@
 /**********************************************************************
 Code   : Main C file for Single Phase Single MPPT GTSI
 Author : Ayush Dinkar
+Author : Ayush Dinkar
 **********************************************************************/
 #include <AFDD.h>    // Main include file
 #include "fft.h"
