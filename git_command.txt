@@ -2,4 +2,4 @@ git add .
 
 git commit -m "Changes made by Ayush"
 
-git push neworigin ayush_branch
+git push 
