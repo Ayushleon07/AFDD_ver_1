@@ -5,7 +5,7 @@ Author : Ayush Dinkar
 <<<<<<< HEAD
 Author : Aman Kumar
 =======
-Lets Rock!!!
+Lets Rock!!
 >>>>>>> 9e60b53c450b61ede94b94fce20ac42b8df0cb00
 **********************************************************************/
 #include <AFDD.h>    // Main include file
