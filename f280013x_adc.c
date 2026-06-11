@@ -205,21 +205,6 @@ void initADC(void)
     AdcaRegs.ADCSOC3CTL.bit.CHSEL   = 1;                // ADC A1: Rogowski_coil_3
     AdcaRegs.ADCSOC3CTL.bit.ACQPS   = 9;
 
-//    AdcaRegs.ADCSOC3CTL.bit.TRIGSEL = 5;
-//    AdcaRegs.ADCSOC3CTL.bit.CHSEL   = 8;              // ADC A8: Heat Sink
-//    AdcaRegs.ADCSOC3CTL.bit.ACQPS   = 9;
-
-
-//    AdcaRegs.ADCSOC5CTL.bit.TRIGSEL = 5;
-//    AdcaRegs.ADCSOC5CTL.bit.CHSEL   = 3;              // ADC A3: BY VOLTAGE
-//    AdcaRegs.ADCSOC5CTL.bit.ACQPS   = 9;
-
-//    AdcaRegs.ADCSOC6CTL.bit.TRIGSEL = 5;
-//    AdcaRegs.ADCSOC6CTL.bit.CHSEL   = 6;              // ADC A6: Arc vtg
-//    AdcaRegs.ADCSOC6CTL.bit.ACQPS   = 9;
-
-
-
 //----- SOC (SOC0, SOC1, SOC2...) Configuration for ADC A: END -----
 
     //----- SOC (SOC0, SOC1, SOC2...) Configuration for ADC C: START -----
@@ -240,15 +225,6 @@ void initADC(void)
     AdccRegs.ADCSOC3CTL.bit.CHSEL   = 15;                // ADC C15: Rogowski_coil_4
     AdccRegs.ADCSOC3CTL.bit.ACQPS   = 9;
 
-
-//    AdccRegs.ADCSOC4CTL.bit.TRIGSEL = 5;
-//    AdccRegs.ADCSOC4CTL.bit.CHSEL   = 6;              // ADC C6: RY VOLTAGE
-//    AdccRegs.ADCSOC4CTL.bit.ACQPS   = 9;
-
-//    AdccRegs.ADCSOC5CTL.bit.TRIGSEL = 5;
-//    AdccRegs.ADCSOC5CTL.bit.CHSEL   = 3;              // ADC C3: B CURRENT
-//    AdccRegs.ADCSOC5CTL.bit.ACQPS   = 9;
-
     //----- SOC (SOC0, SOC1, SOC2...) Configuration for ADC C: END -----
 
 // ################################################################################################
@@ -261,16 +237,13 @@ void initADC(void)
     AdcaRegs.ADCINTSOCSEL1.bit.SOC1         = 0;                // No ADCINT will trigger SOC1
     AdcaRegs.ADCINTSOCSEL1.bit.SOC2         = 0;                // No ADCINT will trigger SOC2
     AdcaRegs.ADCINTSOCSEL1.bit.SOC3         = 0;                // No ADCINT will trigger SOC3
-//    AdcaRegs.ADCINTSOCSEL1.bit.SOC4         = 0;                // No ADCINT will trigger SOC4
-//    AdcaRegs.ADCINTSOCSEL1.bit.SOC5         = 0;                // No ADCINT will trigger SOC5
-//    AdcaRegs.ADCINTSOCSEL1.bit.SOC6         = 0;                // No ADCINT will trigger SOC5
+
 
     AdccRegs.ADCINTSOCSEL1.bit.SOC0         = 0;                // No ADCINT will trigger SOC0
     AdccRegs.ADCINTSOCSEL1.bit.SOC1         = 0;                // No ADCINT will trigger SOC1
     AdccRegs.ADCINTSOCSEL1.bit.SOC2         = 0;                // No ADCINT will trigger SOC2
     AdccRegs.ADCINTSOCSEL1.bit.SOC3         = 0;                // No ADCINT will trigger SOC3
-//    AdccRegs.ADCINTSOCSEL1.bit.SOC4         = 0;                // No ADCINT will trigger SOC4
-//    AdccRegs.ADCINTSOCSEL1.bit.SOC5         = 0;                // No ADCINT will trigger SOC5
+
 
     //----- Triggering ADC Interrupts: END -----
 
