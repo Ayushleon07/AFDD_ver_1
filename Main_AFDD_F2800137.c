@@ -1,12 +1,7 @@
 
 /**********************************************************************
-Code   : Main C file for Single Phase Single MPPT GTSI
-Author : Ayush Dinkar
-<<<<<<< HEAD
-Author : Aman Kumar
-=======
-Lets Rock!!
->>>>>>> 9e60b53c450b61ede94b94fce20ac42b8df0cb00
+Code   : Main C file for Arc Fault Detection Device
+Author : Kshitij Kumar
 **********************************************************************/
 #include <AFDD.h>    // Main include file
 #include "fft.h"
