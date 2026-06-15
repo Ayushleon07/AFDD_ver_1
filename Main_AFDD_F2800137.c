@@ -2,7 +2,11 @@
 /**********************************************************************
 Code   : Main C file for Single Phase Single MPPT GTSI
 Author : Ayush Dinkar
-Kshitij is a naughty boy
+<<<<<<< HEAD
+Author : Aman Kumar
+=======
+Lets Rock!!
+>>>>>>> 9e60b53c450b61ede94b94fce20ac42b8df0cb00
 **********************************************************************/
 #include <AFDD.h>    // Main include file
 #include "fft.h"
@@ -34,10 +38,10 @@ bool flag = false;
 Uint16 fft_index = 0;
 bool fft_ready = false;
 float Energy = 0.0f;
-bool Reset = true;
+bool Reset = false;
 bool Arc = false;
 Uint32 arc_ctr = 0;
-float Max_energy = 0.0f;
+float Max_energy = 10.0f;
 
 
 void main(void)
