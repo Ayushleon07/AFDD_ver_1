@@ -243,6 +243,20 @@ typedef struct{
 }ac_parameters;
 
 typedef struct{
+    ac_parameters I1;
+    ac_parameters I2;
+    ac_parameters I3;
+    ac_parameters I4;
+}CURRENTS;
+
+typedef struct{
+    ac_parameters R1;
+    ac_parameters R2;
+    ac_parameters R3;
+    ac_parameters R4;
+}ROGOWSKIS;
+
+typedef struct{
     Uint32 fft_index;
     float fft_input[FFT_SIZE];
     complex_t fft_output[FFT_SIZE];
@@ -264,14 +278,16 @@ typedef enum{
     rogo_4,
 }SAMPLES;
 
-extern ac_parameters Rogowski_coil_1_vtg;
-extern ac_parameters Rogowski_coil_2_vtg;
-extern ac_parameters Rogowski_coil_3_vtg;
-extern ac_parameters Rogowski_coil_4_vtg;
-extern ac_parameters I1_out;
-extern ac_parameters I2_out;
-extern ac_parameters I3_out;
-extern ac_parameters I4_out;
+//extern ac_parameters Rogowski_coil_1_vtg;
+//extern ac_parameters Rogowski_coil_2_vtg;
+//extern ac_parameters Rogowski_coil_3_vtg;
+//extern ac_parameters Rogowski_coil_4_vtg;
+//extern ac_parameters I1_out;
+//extern ac_parameters I2_out;
+//extern ac_parameters I3_out;
+//extern ac_parameters I4_out;
+extern CURRENTS current;
+extern ROGOWSKIS rogowski;
 extern FFT_PARAMS fft_1;
 extern FFT_PARAMS fft_2;
 extern FFT_PARAMS fft_3;

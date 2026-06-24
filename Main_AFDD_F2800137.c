@@ -13,61 +13,121 @@ FFT_PARAMS fft_2;
 FFT_PARAMS fft_3;
 FFT_PARAMS fft_4;
 STATE_PARAMS currstate = test;
-ac_parameters Rogowski_coil_1_vtg = {
+//ac_parameters Rogowski_coil_1_vtg = {
+//          .sense = 0.0f,
+//          .offset = 1.65f,
+//          .multiplier = 1.0f,
+//          .sum = 0.0f,
+//          .actual = 0.0f
+//};
+//ac_parameters Rogowski_coil_2_vtg = {
+//          .sense = 0.0f,
+//          .offset = 1.65f,
+//          .multiplier = 1.0f,
+//          .sum = 0.0f,
+//          .actual = 0.0f
+//};
+//ac_parameters Rogowski_coil_3_vtg = {
+//          .sense = 0.0f,
+//          .offset = 1.65f,
+//          .multiplier = 1.0f,
+//          .sum = 0.0f,
+//          .actual = 0.0f
+//};
+//ac_parameters Rogowski_coil_4_vtg = {
+//          .sense = 0.0f,
+//          .offset = 1.65f,
+//          .multiplier = 1.0f,
+//          .sum = 0.0f,
+//          .actual = 0.0f
+//};
+//ac_parameters I1_out = {
+//          .sense = 0.0f,
+//          .offset = 1.65f,
+//          .multiplier = 1.0f,
+//          .sum = 0.0f,
+//          .actual = 0.0f
+//};
+//ac_parameters I2_out = {
+//          .sense = 0.0f,
+//          .offset = 1.65f,
+//          .multiplier = 1.0f,
+//          .sum = 0.0f,
+//          .actual = 0.0f
+//};
+//ac_parameters I3_out = {
+//          .sense = 0.0f,
+//          .offset = 1.65f,
+//          .multiplier = 1.0f,
+//          .sum = 0.0f,
+//          .actual = 0.0f
+//};
+//ac_parameters I4_out = {
+//          .sense = 0.0f,
+//          .offset = 1.65f,
+//          .multiplier = 1.0f,
+//          .sum = 0.0f,
+//          .actual = 0.0f
+//};
+ROGOWSKIS rogowski = {
+      .R1 = {
           .sense = 0.0f,
           .offset = 1.65f,
           .multiplier = 1.0f,
           .sum = 0.0f,
           .actual = 0.0f
+      },
+      .R2 = {
+          .sense = 0.0f,
+          .offset = 1.65f,
+          .multiplier = 1.0f,
+          .sum = 0.0f,
+          .actual = 0.0f
+      },
+      .R3 = {
+          .sense = 0.0f,
+          .offset = 1.65f,
+          .multiplier = 1.0f,
+          .sum = 0.0f,
+          .actual = 0.0f
+      },
+      .R4 = {
+          .sense = 0.0f,
+          .offset = 1.65f,
+          .multiplier = 1.0f,
+          .sum = 0.0f,
+          .actual = 0.0f
+      }
 };
-ac_parameters Rogowski_coil_2_vtg = {
-          .sense = 0.0f,
-          .offset = 1.65f,
-          .multiplier = 1.0f,
-          .sum = 0.0f,
-          .actual = 0.0f
-};
-ac_parameters Rogowski_coil_3_vtg = {
-          .sense = 0.0f,
-          .offset = 1.65f,
-          .multiplier = 1.0f,
-          .sum = 0.0f,
-          .actual = 0.0f
-};
-ac_parameters Rogowski_coil_4_vtg = {
-          .sense = 0.0f,
-          .offset = 1.65f,
-          .multiplier = 1.0f,
-          .sum = 0.0f,
-          .actual = 0.0f
-};
-ac_parameters I1_out = {
-          .sense = 0.0f,
-          .offset = 1.65f,
-          .multiplier = 1.0f,
-          .sum = 0.0f,
-          .actual = 0.0f
-};
-ac_parameters I2_out = {
-          .sense = 0.0f,
-          .offset = 1.65f,
-          .multiplier = 1.0f,
-          .sum = 0.0f,
-          .actual = 0.0f
-};
-ac_parameters I3_out = {
-          .sense = 0.0f,
-          .offset = 1.65f,
-          .multiplier = 1.0f,
-          .sum = 0.0f,
-          .actual = 0.0f
-};
-ac_parameters I4_out = {
-          .sense = 0.0f,
-          .offset = 1.65f,
-          .multiplier = 1.0f,
-          .sum = 0.0f,
-          .actual = 0.0f
+CURRENTS current = {
+    .I1 = {
+        .sense = 0.0f,
+        .offset = 1.65f,
+        .multiplier = 1.0f,
+        .sum = 0.0f,
+        .actual = 0.0f
+    },
+    .I2 = {
+        .sense = 0.0f,
+        .offset = 1.65f,
+        .multiplier = 1.0f,
+        .sum = 0.0f,
+        .actual = 0.0f
+    },
+    .I3 = {
+        .sense = 0.0f,
+        .offset = 1.65f,
+        .multiplier = 1.0f,
+        .sum = 0.0f,
+        .actual = 0.0f
+    },
+    .I4 = {
+        .sense = 0.0f,
+        .offset = 1.65f,
+        .multiplier = 1.0f,
+        .sum = 0.0f,
+        .actual = 0.0f
+    }
 };
 Uint32 ctr = 0;
 bool offset_calibrated = false;
@@ -160,6 +220,7 @@ void main(void)
             bit_reversal(fft_1.fft_output);
             fft_dit(fft_1.fft_output);
             compute_magnitude(fft_1.fft_output, fft_1.fft_magnitude);
+            compute_range_magnitude(fft_1.fft_output, ranged_magnitude, 10000.0f, 20000.0f);
         }
         else if(fft_2.fft_ready){
             apply_window(fft_2.fft_output, fft_2.fft_input);
@@ -179,6 +240,9 @@ void main(void)
             fft_dit(fft_4.fft_output);
             compute_magnitude(fft_4.fft_output, fft_4.fft_magnitude);
         }
+
+
+
 
 
 //        if(fft_ready)

@@ -452,52 +452,78 @@ interrupt void USER12_ISR(void)
 
 interrupt void ADCA1_ISR(void){
 
-    I1_out.sense = AdcaResultRegs.ADCRESULT0 * a;
-    I2_out.sense = AdccResultRegs.ADCRESULT0 * a;
-    I3_out.sense = AdcaResultRegs.ADCRESULT1 * a;
-    I4_out.sense = AdccResultRegs.ADCRESULT1 * a;
-    Rogowski_coil_1_vtg.sense = AdcaResultRegs.ADCRESULT2 * a;
-    Rogowski_coil_2_vtg.sense = AdccResultRegs.ADCRESULT2 * a;
-    Rogowski_coil_3_vtg.sense = AdcaResultRegs.ADCRESULT3 * a;
-    Rogowski_coil_4_vtg.sense = AdccResultRegs.ADCRESULT3 * a;
+    current.I1.sense = AdcaResultRegs.ADCRESULT0 * a;
+    current.I2.sense = AdccResultRegs.ADCRESULT0 * a;
+    current.I3.sense = AdcaResultRegs.ADCRESULT1 * a;
+    current.I4.sense = AdccResultRegs.ADCRESULT1 * a;
+    rogowski.R1.sense = AdcaResultRegs.ADCRESULT2 * a;
+    rogowski.R2.sense = AdccResultRegs.ADCRESULT2 * a;
+    rogowski.R3.sense = AdcaResultRegs.ADCRESULT3 * a;
+    rogowski.R4.sense = AdccResultRegs.ADCRESULT3 * a;
 
     if(offset_calibrated){
-        I1_out.actual = (I1_out.sense - I1_out.offset) * I1_out.multiplier;
-        I2_out.actual = (I2_out.sense - I2_out.offset) * I2_out.multiplier;
-        I3_out.actual = (I3_out.sense - I3_out.offset) * I3_out.multiplier;
-        I4_out.actual = (I4_out.sense - I4_out.offset) * I4_out.multiplier;
-        Rogowski_coil_1_vtg.actual = (Rogowski_coil_1_vtg.sense - Rogowski_coil_1_vtg.offset) * Rogowski_coil_1_vtg.multiplier;
-        Rogowski_coil_2_vtg.actual = (Rogowski_coil_2_vtg.sense - Rogowski_coil_2_vtg.offset) * Rogowski_coil_2_vtg.multiplier;
-        Rogowski_coil_3_vtg.actual = (Rogowski_coil_3_vtg.sense - Rogowski_coil_3_vtg.offset) * Rogowski_coil_3_vtg.multiplier;
-        Rogowski_coil_4_vtg.actual = (Rogowski_coil_4_vtg.sense - Rogowski_coil_4_vtg.offset) * Rogowski_coil_4_vtg.multiplier;
+        current.I1.actual = (current.I1.sense - current.I1.offset) * current.I1.multiplier;
+        current.I2.actual = (current.I2.sense - current.I2.offset) * current.I2.multiplier;
+        current.I3.actual = (current.I3.sense - current.I3.offset) * current.I3.multiplier;
+        current.I4.actual = (current.I4.sense - current.I4.offset) * current.I4.multiplier;
+        rogowski.R1.actual = (rogowski.R1.sense - rogowski.R1.offset) * rogowski.R1.multiplier;
+        rogowski.R2.actual = (rogowski.R2.sense - rogowski.R2.offset) * rogowski.R2.multiplier;
+        rogowski.R3.actual = (rogowski.R3.sense - rogowski.R3.offset) * rogowski.R3.multiplier;
+        rogowski.R4.actual = (rogowski.R4.sense - rogowski.R4.offset) * rogowski.R4.multiplier;
     }
 
 
     switch(currstate){
         case test:{
+//            // PWM Signal Check
+//             if (Channel_1_GATE_Signal == 1) CHANNEL1_ON;
+//             else                            CHANNEL1_OFF;
+//
+//             if (Channel_2_GATE_Signal == 1) CHANNEL2_ON;
+//             else                            CHANNEL2_OFF;
+//
+//             if (Channel_3_GATE_Signal == 1) CHANNEL3_ON;
+//             else                            CHANNEL3_OFF;
+//
+//             if (Channel_4_GATE_Signal == 1) CHANNEL4_ON;
+//             else                            CHANNEL4_OFF;
+//
+//             // LED Indication Check
+//             if (Channel_1_STATUS_OK == 1)   CH1_HEALTHY();
+//             else                            CH1_FAULTY();
+//
+//             if (Channel_2_STATUS_OK == 1)   CH2_HEALTHY();
+//             else                            CH2_FAULTY();
+//
+//             if (Channel_3_STATUS_OK == 1)   CH3_HEALTHY();
+//             else                            CH3_FAULTY();
+//
+//             if (Channel_4_STATUS_OK == 1)   CH4_HEALTHY();
+//             else                            CH4_FAULTY();
+
             break;
         }
         case offset_calibration:{
 
             ctr++;
-            I1_out.sum += I1_out.sense;
-            I2_out.sum += I2_out.sense;
-            I3_out.sum += I3_out.sense;
-            I4_out.sum += I4_out.sense;
-            Rogowski_coil_1_vtg.sum += Rogowski_coil_1_vtg.sense;
-            Rogowski_coil_2_vtg.sum += Rogowski_coil_2_vtg.sense;
-            Rogowski_coil_3_vtg.sum += Rogowski_coil_3_vtg.sense;
-            Rogowski_coil_4_vtg.sum += Rogowski_coil_4_vtg.sense;
+            current.I1.sum += current.I1.sense;
+            current.I2.sum += current.I2.sense;
+            current.I3.sum += current.I3.sense;
+            current.I4.sum += current.I4.sense;
+            rogowski.R1.sum += rogowski.R1.sense;
+            rogowski.R2.sum += rogowski.R2.sense;
+            rogowski.R3.sum += rogowski.R3.sense;
+            rogowski.R4.sum += rogowski.R4.sense;
 
             if(ctr >= two_sec_cnt){
-                I1_out.offset = I1_out.sum / two_sec_cnt;
-                I2_out.offset = I2_out.sum / two_sec_cnt;
-                I3_out.offset = I3_out.sum / two_sec_cnt;
-                I4_out.offset = I4_out.sum / two_sec_cnt;
-                Rogowski_coil_1_vtg.offset = Rogowski_coil_1_vtg.sum / two_sec_cnt;
-                Rogowski_coil_2_vtg.offset = Rogowski_coil_2_vtg.sum / two_sec_cnt;
-                Rogowski_coil_3_vtg.offset = Rogowski_coil_3_vtg.sum / two_sec_cnt;
-                Rogowski_coil_4_vtg.offset = Rogowski_coil_4_vtg.sum / two_sec_cnt;
+                current.I1.offset = current.I1.sum / two_sec_cnt;
+                current.I2.offset = current.I2.sum / two_sec_cnt;
+                current.I3.offset = current.I3.sum / two_sec_cnt;
+                current.I4.offset = current.I4.sum / two_sec_cnt;
+                rogowski.R1.offset = rogowski.R1.sum / two_sec_cnt;
+                rogowski.R2.offset = rogowski.R2.sum / two_sec_cnt;
+                rogowski.R3.offset = rogowski.R3.sum / two_sec_cnt;
+                rogowski.R4.offset = rogowski.R4.sum / two_sec_cnt;
                 offset_calibrated = true;
                 ctr = 0;
             }
@@ -508,7 +534,7 @@ interrupt void ADCA1_ISR(void){
             switch(state){
                 case rogo_1:{
 
-                    fft_1.fft_input[fft_1.fft_index++] = Rogowski_coil_1_vtg.actual;
+                    fft_1.fft_input[fft_1.fft_index++] = rogowski.R1.actual;
                     if(fft_1.fft_index >= FFT_SIZE){
                         fft_1.fft_index = 0;
                         fft_1.fft_ready = true;
@@ -517,7 +543,7 @@ interrupt void ADCA1_ISR(void){
                 }
                 case rogo_2:{
 
-                    fft_2.fft_input[fft_2.fft_index++] = Rogowski_coil_2_vtg.actual;
+                    fft_2.fft_input[fft_2.fft_index++] = rogowski.R2.actual;
                     if(fft_2.fft_index >= FFT_SIZE){
                         fft_2.fft_index = 0;
                         fft_2.fft_ready = true;
@@ -526,7 +552,7 @@ interrupt void ADCA1_ISR(void){
                 }
                 case rogo_3:{
 
-                    fft_3.fft_input[fft_3.fft_index++] = Rogowski_coil_3_vtg.actual;
+                    fft_3.fft_input[fft_3.fft_index++] = rogowski.R3.actual;
                     if(fft_3.fft_index >= FFT_SIZE){
                         fft_3.fft_index = 0;
                         fft_3.fft_ready = true;
@@ -535,7 +561,7 @@ interrupt void ADCA1_ISR(void){
                 }
                 case rogo_4:{
 
-                    fft_4.fft_input[fft_4.fft_index++] = Rogowski_coil_4_vtg.actual;
+                    fft_4.fft_input[fft_4.fft_index++] = rogowski.R4.actual;
                     if(fft_4.fft_index >= FFT_SIZE){
                         fft_4.fft_index = 0;
                         fft_4.fft_ready = true;
