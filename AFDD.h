@@ -160,6 +160,61 @@ extern const struct PIE_VECT_TABLE PieVectTableInit;    // PieVectTableInit is a
 #define ENERGY_AVG_LEN  8                           // number of energy blocks to average
 
 
+//Channel 1
+#define CH1_GREEN_ON()      GpioDataRegs.GPASET.bit.GPIO11 = 1
+#define CH1_GREEN_OFF()     GpioDataRegs.GPACLEAR.bit.GPIO11 = 1
+
+#define CH1_RED_ON()        GpioDataRegs.GPASET.bit.GPIO20 = 1
+#define CH1_RED_OFF()       GpioDataRegs.GPACLEAR.bit.GPIO20 = 1
+
+#define CH1_HEALTHY()       do{CH1_GREEN_ON();  CH1_RED_OFF();}while(0)
+#define CH1_FAULTY()        do{CH1_GREEN_OFF(); CH1_RED_ON(); }while(0)
+
+
+//Channel 2
+#define CH2_GREEN_ON()      GpioDataRegs.GPBSET.bit.GPIO33 = 1
+#define CH2_GREEN_OFF()     GpioDataRegs.GPBCLEAR.bit.GPIO33 = 1
+
+#define CH2_RED_ON()        GpioDataRegs.GPASET.bit.GPIO21 = 1
+#define CH2_RED_OFF()       GpioDataRegs.GPACLEAR.bit.GPIO21 = 1
+
+#define CH2_HEALTHY()       do{CH2_GREEN_ON();  CH2_RED_OFF();}while(0)
+#define CH2_FAULTY()        do{CH2_GREEN_OFF(); CH2_RED_ON(); }while(0)
+
+//Channel 3
+#define CH3_GREEN_ON()      GpioDataRegs.GPASET.bit.GPIO16 = 1
+#define CH3_GREEN_OFF()     GpioDataRegs.GPACLEAR.bit.GPIO16 = 1
+
+#define CH3_RED_ON()        GpioDataRegs.GPASET.bit.GPIO13 = 1
+#define CH3_RED_OFF()       GpioDataRegs.GPACLEAR.bit.GPIO13 = 1
+
+#define CH3_HEALTHY()       do{CH3_GREEN_ON();  CH3_RED_OFF();}while(0)
+#define CH3_FAULTY()        do{CH3_GREEN_OFF(); CH3_RED_ON(); }while(0)
+
+//Channel 4
+#define CH4_GREEN_ON()      GpioDataRegs.GPASET.bit.GPIO17 = 1
+#define CH4_GREEN_OFF()     GpioDataRegs.GPACLEAR.bit.GPIO17 = 1
+
+#define CH4_RED_ON()        GpioDataRegs.GPASET.bit.GPIO12 = 1
+#define CH4_RED_OFF()       GpioDataRegs.GPACLEAR.bit.GPIO12 = 1
+
+#define CH4_HEALTHY()       do{CH4_GREEN_ON();  CH4_RED_OFF();}while(0)
+#define CH4_FAULTY()        do{CH4_GREEN_OFF(); CH4_RED_ON(); }while(0)
+
+// Turn OFF PWM gate Signals
+#define CHANNEL1_OFF EPwm1Regs.AQCSFRC.bit.CSFA = 1
+#define CHANNEL2_OFF EPwm1Regs.AQCSFRC.bit.CSFB = 1
+#define CHANNEL3_OFF EPwm2Regs.AQCSFRC.bit.CSFA = 1
+#define CHANNEL4_OFF EPwm2Regs.AQCSFRC.bit.CSFB = 1
+
+// Turn ON PWM gate Signals
+#define CHANNEL1_ON EPwm1Regs.AQCSFRC.bit.CSFA = 2
+#define CHANNEL2_ON EPwm1Regs.AQCSFRC.bit.CSFB = 2
+#define CHANNEL3_ON EPwm2Regs.AQCSFRC.bit.CSFA = 2
+#define CHANNEL4_ON EPwm2Regs.AQCSFRC.bit.CSFB = 2
+
+
+
 #define bin1 10000.0f
 #define bin2 20000.0f
 #define range (int)((bin2 * FFT_SIZE / FFT_SAM_FREQ) - (bin1 * FFT_SIZE / FFT_SAM_FREQ))
@@ -187,12 +242,46 @@ typedef struct{
     float actual;
 }ac_parameters;
 
+typedef struct{
+    Uint32 fft_index;
+    float fft_input[FFT_SIZE];
+    complex_t fft_output[FFT_SIZE];
+    bool fft_ready;
+    float fft_magnitude[FFT_SIZE / 2];
+}FFT_PARAMS;
 
+typedef enum{
+    test,
+    offset_calibration,
+    controller_active,
+    trip_state,
+}STATE_PARAMS;
 
+typedef enum{
+    rogo_1,
+    rogo_2,
+    rogo_3,
+    rogo_4,
+}SAMPLES;
 
-extern ac_parameters ARC_VTG;
+extern ac_parameters Rogowski_coil_1_vtg;
+extern ac_parameters Rogowski_coil_2_vtg;
+extern ac_parameters Rogowski_coil_3_vtg;
+extern ac_parameters Rogowski_coil_4_vtg;
+extern ac_parameters I1_out;
+extern ac_parameters I2_out;
+extern ac_parameters I3_out;
+extern ac_parameters I4_out;
+extern FFT_PARAMS fft_1;
+extern FFT_PARAMS fft_2;
+extern FFT_PARAMS fft_3;
+extern FFT_PARAMS fft_4;
+extern STATE_PARAMS currstate;
+extern SAMPLES state;
 extern Uint32 ctr;
-extern bool flag;
+extern bool offset_calibrated;
+
+
 extern Uint16 Acc;
 extern float waveform_ry[512];
 extern float waveform_RY[200];
@@ -205,6 +294,7 @@ extern float ranged_magnitude[range];
 extern bool Arc;
 extern Uint32 arc_ctr;
 extern float Max_energy;
+
 
 //static inline float PIcontroller(float *out, float *out_prev, float *error, float *error_prev, float *upper_sat, float *lower_sat, float *Kp, float *Ki ){
 //

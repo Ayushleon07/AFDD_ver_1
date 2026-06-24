@@ -7,8 +7,8 @@ MEMORY
    RAMM1            : origin = 0x00000400, length = 0x000003F8
    // RAMM1_RSVD       : origin = 0x000007F8, length = 0x00000008 /* Reserve and do not use for code as per the errata advisory "Memory: Prefetching Beyond Valid Memory" */
 
-   RAMLS0           : origin = 0x00008000, length = 0x00002000
-   RAMLS1           : origin = 0x0000A000, length = 0x00001FF8
+   RAMLS0           : origin = 0x00008000, length = 0x00004FF8
+//   RAMLS1           : origin = 0x0000A000, length = 0x00001FF8
    // RAMLS1_RSVD      : origin = 0x0000BFF8, length = 0x00000008 /* Reserve and do not use for code as per the errata advisory "Memory: Prefetching Beyond Valid Memory" */
 
    RESET            : origin = 0x003FFFC0, length = 0x00000002

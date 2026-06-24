@@ -8,6 +8,73 @@ Author : Ayush Dinkar
 //**********************************************************************
 //--- Global Variables---
 //**********************************************************************
+FFT_PARAMS fft_1;
+FFT_PARAMS fft_2;
+FFT_PARAMS fft_3;
+FFT_PARAMS fft_4;
+STATE_PARAMS currstate = test;
+ac_parameters Rogowski_coil_1_vtg = {
+          .sense = 0.0f,
+          .offset = 1.65f,
+          .multiplier = 1.0f,
+          .sum = 0.0f,
+          .actual = 0.0f
+};
+ac_parameters Rogowski_coil_2_vtg = {
+          .sense = 0.0f,
+          .offset = 1.65f,
+          .multiplier = 1.0f,
+          .sum = 0.0f,
+          .actual = 0.0f
+};
+ac_parameters Rogowski_coil_3_vtg = {
+          .sense = 0.0f,
+          .offset = 1.65f,
+          .multiplier = 1.0f,
+          .sum = 0.0f,
+          .actual = 0.0f
+};
+ac_parameters Rogowski_coil_4_vtg = {
+          .sense = 0.0f,
+          .offset = 1.65f,
+          .multiplier = 1.0f,
+          .sum = 0.0f,
+          .actual = 0.0f
+};
+ac_parameters I1_out = {
+          .sense = 0.0f,
+          .offset = 1.65f,
+          .multiplier = 1.0f,
+          .sum = 0.0f,
+          .actual = 0.0f
+};
+ac_parameters I2_out = {
+          .sense = 0.0f,
+          .offset = 1.65f,
+          .multiplier = 1.0f,
+          .sum = 0.0f,
+          .actual = 0.0f
+};
+ac_parameters I3_out = {
+          .sense = 0.0f,
+          .offset = 1.65f,
+          .multiplier = 1.0f,
+          .sum = 0.0f,
+          .actual = 0.0f
+};
+ac_parameters I4_out = {
+          .sense = 0.0f,
+          .offset = 1.65f,
+          .multiplier = 1.0f,
+          .sum = 0.0f,
+          .actual = 0.0f
+};
+Uint32 ctr = 0;
+bool offset_calibrated = false;
+SAMPLES state = rogo_1;
+//**********************************************************************
+//--- Global Variables---
+//**********************************************************************
 complex_t x[FFT_SIZE];
 float magnitude[FFT_SIZE / 2];
 float max_magnitude[FFT_SIZE / 2] = {0.0f};
@@ -19,16 +86,7 @@ float fft_input[FFT_SIZE];
 Uint16 Acc = 0;
 float waveform_RY[200] = {0.0f};
 
-ac_parameters ARC_VTG = {
-          .sense = 0.0f,
-          .offset = 1.65f,
-          .multiplier = 1.0f,
-          .sum = 0.0f,
-          .actual = 0.0f
-};
 
-Uint32 ctr = 0;
-bool flag = false;
 Uint16 fft_index = 0;
 bool fft_ready = false;
 float Energy = 0.0f;
@@ -96,19 +154,46 @@ void main(void)
     compute_window();
 
     while(1){
-        if(fft_ready)
-        {
-            GpioDataRegs.GPASET.bit.GPIO16 = 1;
-            apply_window(x, fft_input);
-            bit_reversal(x);
-            fft_dit(x);
-            compute_magnitude(x, magnitude);
-            GpioDataRegs.GPACLEAR.bit.GPIO16 = 1;
-            compute_range_magnitude(x, ranged_magnitude, 10000.0f, 20000.0f);
-            Energy = compute_band_energy(x, 10000.0f, 20000.0f);
 
-            fft_ready = false;
+        if(fft_1.fft_ready){
+            apply_window(fft_1.fft_output, fft_1.fft_input);
+            bit_reversal(fft_1.fft_output);
+            fft_dit(fft_1.fft_output);
+            compute_magnitude(fft_1.fft_output, fft_1.fft_magnitude);
         }
+        else if(fft_2.fft_ready){
+            apply_window(fft_2.fft_output, fft_2.fft_input);
+            bit_reversal(fft_2.fft_output);
+            fft_dit(fft_2.fft_output);
+            compute_magnitude(fft_2.fft_output, fft_2.fft_magnitude);
+        }
+        else if(fft_3.fft_ready){
+            apply_window(fft_3.fft_output, fft_3.fft_input);
+            bit_reversal(fft_3.fft_output);
+            fft_dit(fft_3.fft_output);
+            compute_magnitude(fft_3.fft_output, fft_3.fft_magnitude);
+        }
+        else if(fft_4.fft_ready){
+            apply_window(fft_4.fft_output, fft_4.fft_input);
+            bit_reversal(fft_4.fft_output);
+            fft_dit(fft_4.fft_output);
+            compute_magnitude(fft_4.fft_output, fft_4.fft_magnitude);
+        }
+
+
+//        if(fft_ready)
+//        {
+//            GpioDataRegs.GPASET.bit.GPIO16 = 1;
+//            apply_window(x, fft_input);
+//            bit_reversal(x);
+//            fft_dit(x);
+//            compute_magnitude(x, magnitude);
+//            GpioDataRegs.GPACLEAR.bit.GPIO16 = 1;
+//            compute_range_magnitude(x, ranged_magnitude, 10000.0f, 20000.0f);
+//            Energy = compute_band_energy(x, 10000.0f, 20000.0f);
+//
+//            fft_ready = false;
+//        }
 
 
 

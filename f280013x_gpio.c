@@ -5,7 +5,40 @@
 // TITLE:  f280013x GPIO module support functions
 //
 //###########################################################################
-
+//
+//
+// $Copyright:
+// Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
+//
+// Redistribution and use in source and binary forms, with or without 
+// modification, are permitted provided that the following conditions 
+// are met:
+// 
+//   Redistributions of source code must retain the above copyright 
+//   notice, this list of conditions and the following disclaimer.
+// 
+//   Redistributions in binary form must reproduce the above copyright
+//   notice, this list of conditions and the following disclaimer in the 
+//   documentation and/or other materials provided with the   
+//   distribution.
+// 
+//   Neither the name of Texas Instruments Incorporated nor the names of
+//   its contributors may be used to endorse or promote products derived
+//   from this software without specific prior written permission.
+// 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// $
+//###########################################################################
 
 //
 // Included Files
@@ -25,9 +58,23 @@
 // Also unlocks all GPIOs. Only one CPU should call this function.
 //
 
+// GPIOs for PWM configuration in ARC Fault Detection Device
+//  GPIO   Functionality
+//  Gpio0   PWM1A
+//  Gpio1   PWM1B
+//  Gpio2   PWM2A
+//  Gpio3   PWM2B
 
-
-// GPIO 12 - Main Relay Control
+// GPIOs for LED indication in ARC Fault Detection Device
+//  GPIO   Functionality   Color
+//   11     CH 1 ON        GREEN
+//   20     CH 1 OFF       RED
+//   33     CH 2 ON        GREEN
+//   21     CH 2 OFF       RED
+//   16     CH 3 ON        GREEN
+//   13     CH 3 OFF       RED
+//   17     CH 4 ON        GREEN
+//   12     CH 4 OFF       RED
 
 
 void
@@ -85,197 +132,172 @@ InitGpio()
     GpioCtrlRegs.GPHQSEL2.all = 0x00000000;     // Synchronous qualification for all group H GPIO 240-255
     GpioCtrlRegs.GPHINV.all   = 0x00000000;     // No inputs inverted
 
-// ------ Configuring AGPIOs as ADC Pins: START ------
-    // ADC A15/C7       V BOOST IN      - AIO233
-    // ADC A12/C1       I BOOST IN      - AIO238
-    // ADC A14/C4       V BUCK IN       - AIO239
-    // ADC A1           I BUCK OUT      - AIO232
-    // ADC A5/C2        V BUCK OUT      - AIO244
-    // ADC A8/C9        HEAT SINK TEMP  - AIO241
-    // ADC A16/C16/GPIO28 - CHARGER TEMP
-    // ADC A9/C8            ALTERNATOR TEMP
-    // ADC A11/C0       BATTERY VOLATGE - AIO237
 
 
-//    GpioCtrlRegs.GPHAMSEL.bit.GPIO232 = 1;
-//    GpioCtrlRegs.GPHAMSEL.bit.GPIO233 = 1;
-//    GpioCtrlRegs.GPHAMSEL.bit.GPIO238 = 1;
-//    GpioCtrlRegs.GPHAMSEL.bit.GPIO239 = 1;
-//    GpioCtrlRegs.GPHAMSEL.bit.GPIO244 = 1;
-//    GpioCtrlRegs.GPHAMSEL.bit.GPIO241 = 1;
-
-    AnalogSubsysRegs.AGPIOCTRLA.bit.GPIO28 = 1;                     // CHARGER TEMPERATURE
-    GpioCtrlRegs.GPAAMSEL.bit.GPIO28 = 1;
-
-    AnalogSubsysRegs.AGPIOCTRLH.bit.GPIO227 = 1;                    // ALTERNATOR TEMPERATURE
-    GpioCtrlRegs.GPHAMSEL.bit.GPIO227 = 1;
-
-    AnalogSubsysRegs.AGPIOCTRLH.bit.GPIO242 = 1;                    // BY_VOLTAGE
+//  Configuring pins as ADCs
+    AnalogSubsysRegs.AGPIOCTRLH.bit.GPIO242 = 1;    // A3/C5
     GpioCtrlRegs.GPHAMSEL.bit.GPIO242 = 1;
 
-    AnalogSubsysRegs.AGPIOCTRLH.bit.GPIO226 = 1;                    // RY_VOLTAGE
-    GpioCtrlRegs.GPHAMSEL.bit.GPIO226 = 1;
+    AnalogSubsysRegs.AGPIOCTRLH.bit.GPIO224 = 1;    // A2/C9
+    GpioCtrlRegs.GPHAMSEL.bit.GPIO224 = 1;
 
-    AnalogSubsysRegs.AGPIOCTRLH.bit.GPIO228 = 1;                    // Y_VOLTAGE
-    GpioCtrlRegs.GPHAMSEL.bit.GPIO228 = 1;
+//  Configuring pins as GPIOs
+    AnalogSubsysRegs.AGPIOCTRLA.bit.GPIO20 = 0;     // Using as digital pin
+    GpioCtrlRegs.GPAAMSEL.bit.GPIO20 = 0;           // Using as digital pin
 
+    AnalogSubsysRegs.AGPIOCTRLA.bit.GPIO21 = 0;     // Using as digital pin
+    GpioCtrlRegs.GPAAMSEL.bit.GPIO21 = 0;           // Using as digital pin
 
-    // ------ Configuring AGPIOs as GPIO Pins: START ------
+    AnalogSubsysRegs.AGPIOCTRLA.bit.GPIO13 = 0;     // Using as digital pin
+    GpioCtrlRegs.GPAAMSEL.bit.GPIO13 = 0;           // Using as digital pin
 
-    AnalogSubsysRegs.AGPIOCTRLA.bit.GPIO12 = 0;                     // MAIN RELAY CONFIGURATION (MAKE IT AS GPIO PIN)
-    GpioCtrlRegs.GPAAMSEL.bit.GPIO12 = 0;
-
-    AnalogSubsysRegs.AGPIOCTRLA.bit.GPIO13 = 0;                     // RS PIN OF LCD
-    GpioCtrlRegs.GPAAMSEL.bit.GPIO13 = 0;
-
-    AnalogSubsysRegs.AGPIOCTRLA.bit.GPIO21 = 0;                     // EN PIN OF LCD
-    GpioCtrlRegs.GPAAMSEL.bit.GPIO21 = 0;
-
-    // ------ Configuring AGPIOs as GPIO Pins: END ------
-
+    AnalogSubsysRegs.AGPIOCTRLA.bit.GPIO12 = 0;     // Using as digital pin
+    GpioCtrlRegs.GPAAMSEL.bit.GPIO12 = 0;           // Using as digital pin
 
 // ################################################################################################
 // ---------------------------------  Pins configuration -------------------------------------
 // ################################################################################################
 
+    // ---------------------------------  EPWM Pins configuration --------------------------------
     //-----------------------------------------------------------------------------------------------------
-    GpioCtrlRegs.GPAGMUX1.bit.GPIO0 = 0;        // 0|1 = PWM Signal (BUCK)
+    GpioCtrlRegs.GPAGMUX1.bit.GPIO0 = 0;        // 0|1 = PWM Signal     GPIO 0 : 1A
     GpioCtrlRegs.GPAMUX1.bit.GPIO0  = 1;
 
     //-----------------------------------------------------------------------------------------------------
-    GpioCtrlRegs.GPAGMUX1.bit.GPIO1 = 1;        // 1|1 = SCIA_TX
+    GpioCtrlRegs.GPAGMUX1.bit.GPIO1 = 0;        // 0|1 = PWM Signal     GPIO 1 : 1B
     GpioCtrlRegs.GPAMUX1.bit.GPIO1  = 1;
 
     //-----------------------------------------------------------------------------------------------------
-    GpioCtrlRegs.GPAGMUX1.bit.GPIO2 = 0;        // 0|1 = PWM Signal
+    GpioCtrlRegs.GPAGMUX1.bit.GPIO2 = 0;        // 0|1 = PWM Signal     GPIO 2 : 2A
     GpioCtrlRegs.GPAMUX1.bit.GPIO2  = 1;
 
     //-----------------------------------------------------------------------------------------------------
-    GpioCtrlRegs.GPAGMUX1.bit.GPIO3 = 0;        // 0|1 = PWM Signal (BOOST)
+    GpioCtrlRegs.GPAGMUX1.bit.GPIO3 = 0;        // 0|1 = PWM Signal     GPIO 3 : 2B
     GpioCtrlRegs.GPAMUX1.bit.GPIO3  = 1;
 
     //-----------------------------------------------------------------------------------------------------
 
-    GpioCtrlRegs.GPAGMUX1.bit.GPIO12 = 0;       //Main Relay Control
-    GpioCtrlRegs.GPAMUX1.bit.GPIO12  = 0;
-    GpioCtrlRegs.GPADIR.bit.GPIO12   = 1;
+    // ---------------------------------  GPIO Pins configuration --------------------------------
 
-
-    //-----------------------------------------------------------------------------------------------------
-
-    GpioCtrlRegs.GPAGMUX1.bit.GPIO13 = 0;        // RS
-    GpioCtrlRegs.GPAMUX1.bit.GPIO13  = 0;
-    GpioCtrlRegs.GPADIR.bit.GPIO13   = 1;
-
-    //-----------------------------------------------------------------------------------------------------
-    GpioCtrlRegs.GPAGMUX2.bit.GPIO16 = 0;
-    GpioCtrlRegs.GPAMUX2.bit.GPIO16  = 0;       // Rogowski coil Relay 1
-    GpioCtrlRegs.GPADIR.bit.GPIO16   = 1;
+    GpioCtrlRegs.GPAGMUX1.bit.GPIO11 = 0;         // Green LED
+    GpioCtrlRegs.GPAMUX1.bit.GPIO11  = 0;
+    GpioCtrlRegs.GPADIR.bit.GPIO11   = 1;         //Configuring GPIO11 as output direction//
 
     //-----------------------------------------------------------------------------------------------------
 
-    GpioCtrlRegs.GPAGMUX2.bit.GPIO17 = 0;        // Rogowski coil Relay 2
-    GpioCtrlRegs.GPAMUX2.bit.GPIO17  = 0;
-    GpioCtrlRegs.GPADIR.bit.GPIO17   = 1;
+    GpioCtrlRegs.GPAGMUX2.bit.GPIO20 = 0;         // Red LED
+    GpioCtrlRegs.GPAMUX2.bit.GPIO20  = 0;
+    GpioCtrlRegs.GPADIR.bit.GPIO20   = 1;         //Configuring GPIO20 as output direction//
+
     //-----------------------------------------------------------------------------------------------------
 
-    GpioCtrlRegs.GPAGMUX2.bit.GPIO21 = 0;        // EN
+    GpioCtrlRegs.GPBGMUX1.bit.GPIO33 = 0;         // Green LED
+    GpioCtrlRegs.GPBMUX1.bit.GPIO33  = 0;
+    GpioCtrlRegs.GPBDIR.bit.GPIO33   = 1;         //Configuring GPIO33 as output direction//
+
+    //-----------------------------------------------------------------------------------------------------
+
+    GpioCtrlRegs.GPAGMUX2.bit.GPIO21 = 0;         // Red LED
     GpioCtrlRegs.GPAMUX2.bit.GPIO21  = 0;
-    GpioCtrlRegs.GPADIR.bit.GPIO21   = 1;
-    //-----------------------------------------------------------------------------------------------------
-
-    GpioCtrlRegs.GPAGMUX2.bit.GPIO23 = 0;        // D4
-    GpioCtrlRegs.GPAMUX2.bit.GPIO23  = 0;
-    GpioCtrlRegs.GPADIR.bit.GPIO23   = 1;
-    //-----------------------------------------------------------------------------------------------------
-
-    GpioCtrlRegs.GPBMUX1.bit.GPIO37 = 0;        // 0|0 = Digital Output
-    GpioCtrlRegs.GPBMUX1.bit.GPIO37  = 0;
-    //-----------------------------------------------------------------------------------------------------
-
-    GpioCtrlRegs.GPBMUX1.bit.GPIO39 = 0;        // Trip LED
-    GpioCtrlRegs.GPBMUX1.bit.GPIO39 = 0;
-    GpioCtrlRegs.GPBDIR.bit.GPIO39  = 1;
-    //-----------------------------------------------------------------------------------------------------
-
-    GpioCtrlRegs.GPAGMUX2.bit.GPIO18 = 0;        // Reset SW
-    GpioCtrlRegs.GPAMUX2.bit.GPIO18  = 0;
-    GpioCtrlRegs.GPADIR.bit.GPIO18   = 0;
+    GpioCtrlRegs.GPADIR.bit.GPIO21   = 1;         //Configuring GPIO21 as output direction//
 
     //-----------------------------------------------------------------------------------------------------
-    GpioCtrlRegs.GPAGMUX2.bit.GPIO19 = 0;        // Trip SW
-    GpioCtrlRegs.GPAMUX2.bit.GPIO19  = 0;
-    GpioCtrlRegs.GPADIR.bit.GPIO19   = 0;
+
+    GpioCtrlRegs.GPAGMUX2.bit.GPIO16 = 0;         // Green LED
+    GpioCtrlRegs.GPAMUX2.bit.GPIO16  = 0;
+    GpioCtrlRegs.GPADIR.bit.GPIO16   = 1;         //Configuring GPIO21 as output direction//
 
     //-----------------------------------------------------------------------------------------------------
-    GpioCtrlRegs.GPAGMUX1.bit.GPIO8 = 0;        // 0|0 = Digital Output
-    GpioCtrlRegs.GPAMUX1.bit.GPIO8  = 0;
-    GpioCtrlRegs.GPADIR.bit.GPIO8 = 1;
-    GpioDataRegs.GPACLEAR.bit.GPIO8 = 1;
+
+    GpioCtrlRegs.GPAGMUX1.bit.GPIO13 = 0;         // Red LED
+    GpioCtrlRegs.GPAMUX1.bit.GPIO13  = 0;
+    GpioCtrlRegs.GPADIR.bit.GPIO13   = 1;         //Configuring GPIO21 as output direction//
 
     //-----------------------------------------------------------------------------------------------------
-    GpioCtrlRegs.GPAGMUX2.bit.GPIO29 = 0;        // 0|1 = SCIA_TX
-    GpioCtrlRegs.GPAMUX2.bit.GPIO29  = 0;
+
+    GpioCtrlRegs.GPAGMUX2.bit.GPIO17 = 0;         // Red LED
+    GpioCtrlRegs.GPAMUX2.bit.GPIO17  = 0;
+    GpioCtrlRegs.GPADIR.bit.GPIO17   = 1;         //Configuring GPIO21 as output direction//
+
     //-----------------------------------------------------------------------------------------------------
 
-    GpioCtrlRegs.GPBMUX1.bit.GPIO40 = 0;        // D5
-    GpioCtrlRegs.GPBMUX1.bit.GPIO40 = 0;
-    GpioCtrlRegs.GPBDIR.bit.GPIO40  = 1;
-//#######################################################################################
-//######################### SWITCHES ####################################################
-//#######################################################################################
-    GpioCtrlRegs.GPAGMUX1.bit.GPIO9 = 0;        // SW1
-    GpioCtrlRegs.GPAMUX1.bit.GPIO9  = 0;
-    GpioCtrlRegs.GPADIR.bit.GPIO9   = 0;
+    GpioCtrlRegs.GPAGMUX1.bit.GPIO12 = 0;         // Red LED
+    GpioCtrlRegs.GPAMUX1.bit.GPIO12  = 0;
+    GpioCtrlRegs.GPADIR.bit.GPIO12   = 1;         //Configuring GPIO21 as output direction//
 
-    GpioCtrlRegs.GPAGMUX1.bit.GPIO7 = 0;        // SW2
-    GpioCtrlRegs.GPAMUX1.bit.GPIO7  = 0;
-    GpioCtrlRegs.GPADIR.bit.GPIO7   = 0;
+    //-----------------------------------------------------------------------------------------------------
 
+    //-----------------------------------------------------------------------------------------------------
+    GpioCtrlRegs.GPAGMUX2.bit.GPIO18 = 0;        // 0|3 = CANA RX
+    GpioCtrlRegs.GPAMUX2.bit.GPIO18  = 3;
 
-    GpioCtrlRegs.GPAGMUX2.bit.GPIO22 = 0;       // SW3
-    GpioCtrlRegs.GPAMUX2.bit.GPIO22  = 0;
-    GpioCtrlRegs.GPADIR.bit.GPIO22   = 0;
+    //-----------------------------------------------------------------------------------------------------
+    GpioCtrlRegs.GPAGMUX2.bit.GPIO19 = 0;        // 0|3 = CANA TX
+    GpioCtrlRegs.GPAMUX2.bit.GPIO19  = 3;
 
-
-    GpioCtrlRegs.GPBMUX1.bit.GPIO41  = 0;        // SW4
-    GpioCtrlRegs.GPBMUX1.bit.GPIO41  = 0;
-    GpioCtrlRegs.GPBDIR.bit.GPIO41   = 0;
+    //-----------------------------------------------------------------------------------------------------
+//    GpioCtrlRegs.GPAGMUX1.bit.GPIO6 = 0;        // 0|0 = Digital Output
+//    GpioCtrlRegs.GPAMUX1.bit.GPIO6  = 0;
+//
+//    //-----------------------------------------------------------------------------------------------------
+//    GpioCtrlRegs.GPAGMUX1.bit.GPIO7 = 0;        // 0|0 = Digital Output
+//    GpioCtrlRegs.GPAMUX1.bit.GPIO7  = 0;
+//
+//    //-----------------------------------------------------------------------------------------------------
+//    GpioCtrlRegs.GPAGMUX1.bit.GPIO8 = 0;        // 0|0 = Digital Output
+//    GpioCtrlRegs.GPAMUX1.bit.GPIO8  = 0;
+//
+//    //-----------------------------------------------------------------------------------------------------
+//    GpioCtrlRegs.GPAGMUX1.bit.GPIO9 = 0;        // 0|0 = Digital Output
+//    GpioCtrlRegs.GPAMUX1.bit.GPIO9  = 0;
+//
+//    //-----------------------------------------------------------------------------------------------------
+//    GpioCtrlRegs.GPAGMUX1.bit.GPIO10 = 0;        // 0|0 = Digital Output
+//    GpioCtrlRegs.GPAMUX1.bit.GPIO10  = 0;
+//
+//    //-----------------------------------------------------------------------------------------------------
+//    GpioCtrlRegs.GPAGMUX2.bit.GPIO17 = 0;        // 0|0 = Digital Output
+//    GpioCtrlRegs.GPAMUX2.bit.GPIO17  = 0;
+//
+//    //-----------------------------------------------------------------------------------------------------
+//    GpioCtrlRegs.GPAGMUX2.bit.GPIO22 = 0;        // 0|0 = Digital Output
+//    GpioCtrlRegs.GPAMUX2.bit.GPIO22  = 0;
+//
+//    //-----------------------------------------------------------------------------------------------------
+//    GpioCtrlRegs.GPAGMUX2.bit.GPIO23 = 0;        // 0|0 = Digital Output
+//    GpioCtrlRegs.GPAMUX2.bit.GPIO23  = 0;
+//
+//    //-----------------------------------------------------------------------------------------------------
+//    GpioCtrlRegs.GPBGMUX1.bit.GPIO39 = 0;        // 0|0 = Digital Output
+//    GpioCtrlRegs.GPBMUX1.bit.GPIO39  = 0;
+//
+//    //-----------------------------------------------------------------------------------------------------
+//    GpioCtrlRegs.GPBGMUX1.bit.GPIO40 = 0;        // 0|0 = Digital Output
+//    GpioCtrlRegs.GPBMUX1.bit.GPIO40  = 0;
+//
+//    //-----------------------------------------------------------------------------------------------------
+//    GpioCtrlRegs.GPBGMUX1.bit.GPIO41 = 0;        // 0|0 = Digital Output
+//    GpioCtrlRegs.GPBMUX1.bit.GPIO41  = 0;
 
 // ################################################################################################
 // ----------------------------  Initialization of GPIOs as OUTPUT Pins ---------------------------
 // ################################################################################################
 
-    //******* Making GPIO pins as Output Pins: START *******
-    GpioCtrlRegs.GPAGMUX1.bit.GPIO4 = 0;        // LED 1
-    GpioCtrlRegs.GPAMUX1.bit.GPIO4  = 0;
-    GpioCtrlRegs.GPADIR.bit.GPIO4   = 1;
-
-    GpioCtrlRegs.GPAGMUX1.bit.GPIO5 = 0;        // LED 2
-    GpioCtrlRegs.GPAMUX1.bit.GPIO5  = 0;
-    GpioCtrlRegs.GPADIR.bit.GPIO5   = 1;
-
-    GpioCtrlRegs.GPAGMUX1.bit.GPIO6 = 0;        // LED 3
-    GpioCtrlRegs.GPAMUX1.bit.GPIO6  = 0;
-    GpioCtrlRegs.GPADIR.bit.GPIO6   = 1;
-
-    GpioCtrlRegs.GPAMUX1.bit.GPIO10 = 0;        // LED 4
-    GpioCtrlRegs.GPAMUX1.bit.GPIO10 = 0;
-    GpioCtrlRegs.GPADIR.bit.GPIO10  = 1;
-
-
-
-//    GpioCtrlRegs.GPADIR.bit.GPIO5 = 1;  //DC+ to Earth Relay
-//    GpioCtrlRegs.GPADIR.bit.GPIO6 = 1;
-//    GpioCtrlRegs.GPADIR.bit.GPIO7 = 1;
-
-//    GpioCtrlRegs.GPADIR.bit.GPIO22 = 1;
-//    GpioCtrlRegs.GPBDIR.bit.GPIO41 = 1;
-//    GpioCtrlRegs.GPADIR.bit.GPIO9 = 1;
-
-//    GpioCtrlRegs.GPADIR.bit.GPIO8 = 1;
-//     ******* Making GPIO pins as Output Pins: END *******
-
+    // ******* Making GPIO pins as Output Pins: START *******
+    GpioCtrlRegs.GPADIR.bit.GPIO6 = 1;
+    GpioCtrlRegs.GPADIR.bit.GPIO7 = 1;
+    GpioCtrlRegs.GPADIR.bit.GPIO8 = 1;
+    GpioCtrlRegs.GPADIR.bit.GPIO9 = 1;
+    GpioCtrlRegs.GPADIR.bit.GPIO10 = 1;
+    GpioCtrlRegs.GPADIR.bit.GPIO12 = 1;
+    GpioCtrlRegs.GPADIR.bit.GPIO16 = 1;
+    GpioCtrlRegs.GPADIR.bit.GPIO17 = 1;
+    GpioCtrlRegs.GPADIR.bit.GPIO22 = 1;
+    GpioCtrlRegs.GPADIR.bit.GPIO23 = 1;
+    GpioCtrlRegs.GPBDIR.bit.GPIO39 = 1;
+    GpioCtrlRegs.GPBDIR.bit.GPIO40 = 1;
+    GpioCtrlRegs.GPBDIR.bit.GPIO41 = 1;
+    // ******* Making GPIO pins as Output Pins: END *******
 
 // ################################################################################################
 // --------------------------- Enable the register locks for all ports ----------------------------
@@ -631,3 +653,4 @@ GPIO_WritePin(Uint16 gpioNumber, Uint16 outVal)
 //
 // End of File
 //
+

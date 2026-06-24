@@ -56,14 +56,14 @@ void InitEPwm(void)
     EPwm1Regs.TBPRD                         = Tbprd;      // 200 kHz Switching frequency
 
     // PWM1A Output
-    EPwm1Regs.CMPA.bit.CMPA                 = 0;
-    EPwm1Regs.AQCTLA.bit.CAU                = 2;
-    EPwm1Regs.AQCTLA.bit.CAD                = 1;
+    EPwm1Regs.CMPA.bit.CMPA                 = Tbprd;
+//    EPwm1Regs.AQCTLA.bit.CAU                = 2;
+//    EPwm1Regs.AQCTLA.bit.CAD                = 1;
 
     // PWM1B Output
-    EPwm1Regs.CMPB.bit.CMPB                 = 0;
-    EPwm1Regs.AQCTLB.bit.CBU                = 2;
-    EPwm1Regs.AQCTLB.bit.CBD                = 1;
+    EPwm1Regs.CMPB.bit.CMPB                 = Tbprd;
+//    EPwm1Regs.AQCTLB.bit.CBU                = 2;
+//    EPwm1Regs.AQCTLB.bit.CBD                = 1;
 
     // ADC SOCA Trigger
     EPwm1Regs.ETSEL.bit.SOCAEN              = 1;

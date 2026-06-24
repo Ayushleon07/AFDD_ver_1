@@ -452,41 +452,140 @@ interrupt void USER12_ISR(void)
 
 interrupt void ADCA1_ISR(void){
 
+    I1_out.sense = AdcaResultRegs.ADCRESULT0 * a;
+    I2_out.sense = AdccResultRegs.ADCRESULT0 * a;
+    I3_out.sense = AdcaResultRegs.ADCRESULT1 * a;
+    I4_out.sense = AdccResultRegs.ADCRESULT1 * a;
+    Rogowski_coil_1_vtg.sense = AdcaResultRegs.ADCRESULT2 * a;
+    Rogowski_coil_2_vtg.sense = AdccResultRegs.ADCRESULT2 * a;
+    Rogowski_coil_3_vtg.sense = AdcaResultRegs.ADCRESULT3 * a;
+    Rogowski_coil_4_vtg.sense = AdccResultRegs.ADCRESULT3 * a;
 
-    ARC_VTG.sense = (AdccResultRegs.ADCRESULT0 * a);
-
-    if(!flag){
-        ARC_VTG.sum = ARC_VTG.sum + ARC_VTG.sense;
-        ctr++;
-        if(ctr >= 200000){
-            flag = true;
-            ARC_VTG.offset = (ARC_VTG.sum) / 200000.0f;
-        }
+    if(offset_calibrated){
+        I1_out.actual = (I1_out.sense - I1_out.offset) * I1_out.multiplier;
+        I2_out.actual = (I2_out.sense - I2_out.offset) * I2_out.multiplier;
+        I3_out.actual = (I3_out.sense - I3_out.offset) * I3_out.multiplier;
+        I4_out.actual = (I4_out.sense - I4_out.offset) * I4_out.multiplier;
+        Rogowski_coil_1_vtg.actual = (Rogowski_coil_1_vtg.sense - Rogowski_coil_1_vtg.offset) * Rogowski_coil_1_vtg.multiplier;
+        Rogowski_coil_2_vtg.actual = (Rogowski_coil_2_vtg.sense - Rogowski_coil_2_vtg.offset) * Rogowski_coil_2_vtg.multiplier;
+        Rogowski_coil_3_vtg.actual = (Rogowski_coil_3_vtg.sense - Rogowski_coil_3_vtg.offset) * Rogowski_coil_3_vtg.multiplier;
+        Rogowski_coil_4_vtg.actual = (Rogowski_coil_4_vtg.sense - Rogowski_coil_4_vtg.offset) * Rogowski_coil_4_vtg.multiplier;
     }
-    else if(flag){
-        ARC_VTG.actual = (ARC_VTG.sense - ARC_VTG.offset) * ARC_VTG.multiplier;
-        waveform_RY[Acc] = ARC_VTG.actual;
-        Acc++;
-        if(Acc >= 200){
-            Acc = 0;
+
+
+    switch(currstate){
+        case test:{
+            break;
         }
+        case offset_calibration:{
 
-        fft_input[fft_index++] = ARC_VTG.actual;
+            ctr++;
+            I1_out.sum += I1_out.sense;
+            I2_out.sum += I2_out.sense;
+            I3_out.sum += I3_out.sense;
+            I4_out.sum += I4_out.sense;
+            Rogowski_coil_1_vtg.sum += Rogowski_coil_1_vtg.sense;
+            Rogowski_coil_2_vtg.sum += Rogowski_coil_2_vtg.sense;
+            Rogowski_coil_3_vtg.sum += Rogowski_coil_3_vtg.sense;
+            Rogowski_coil_4_vtg.sum += Rogowski_coil_4_vtg.sense;
 
-        if(fft_index >= FFT_SIZE)
-        {
-            fft_index = 0;
-            fft_ready = true;
-        }
-        if(Energy >= 75.0f){
-
-            arc_ctr++;
-            if(arc_ctr > 10000){
-                Arc = true;
-                Trip_LED_ON;
+            if(ctr >= two_sec_cnt){
+                I1_out.offset = I1_out.sum / two_sec_cnt;
+                I2_out.offset = I2_out.sum / two_sec_cnt;
+                I3_out.offset = I3_out.sum / two_sec_cnt;
+                I4_out.offset = I4_out.sum / two_sec_cnt;
+                Rogowski_coil_1_vtg.offset = Rogowski_coil_1_vtg.sum / two_sec_cnt;
+                Rogowski_coil_2_vtg.offset = Rogowski_coil_2_vtg.sum / two_sec_cnt;
+                Rogowski_coil_3_vtg.offset = Rogowski_coil_3_vtg.sum / two_sec_cnt;
+                Rogowski_coil_4_vtg.offset = Rogowski_coil_4_vtg.sum / two_sec_cnt;
+                offset_calibrated = true;
+                ctr = 0;
             }
+
+            break;
+        }
+        case controller_active:{
+            switch(state){
+                case rogo_1:{
+
+                    fft_1.fft_input[fft_1.fft_index++] = Rogowski_coil_1_vtg.actual;
+                    if(fft_1.fft_index >= FFT_SIZE){
+                        fft_1.fft_index = 0;
+                        fft_1.fft_ready = true;
+                    }
+                    break;
+                }
+                case rogo_2:{
+
+                    fft_2.fft_input[fft_2.fft_index++] = Rogowski_coil_2_vtg.actual;
+                    if(fft_2.fft_index >= FFT_SIZE){
+                        fft_2.fft_index = 0;
+                        fft_2.fft_ready = true;
+                    }
+                    break;
+                }
+                case rogo_3:{
+
+                    fft_3.fft_input[fft_3.fft_index++] = Rogowski_coil_3_vtg.actual;
+                    if(fft_3.fft_index >= FFT_SIZE){
+                        fft_3.fft_index = 0;
+                        fft_3.fft_ready = true;
+                    }
+                    break;
+                }
+                case rogo_4:{
+
+                    fft_4.fft_input[fft_4.fft_index++] = Rogowski_coil_4_vtg.actual;
+                    if(fft_4.fft_index >= FFT_SIZE){
+                        fft_4.fft_index = 0;
+                        fft_4.fft_ready = true;
+                    }
+                    break;
+                }
+            }
+
+
+            break;
+        }
+        case trip_state:{
+            break;
         }
     }
+
+//    ARC_VTG.sense = (AdcaResultRegs.ADCRESULT2 * a);
+//
+//    if(!flag){
+//        ARC_VTG.sum = ARC_VTG.sum + ARC_VTG.sense;
+//        ctr++;
+//        if(ctr >= 200000){
+//            flag = true;
+//            ARC_VTG.offset = (ARC_VTG.sum) / 200000.0f;
+//        }
+//    }
+//    else if(flag){
+//        ARC_VTG.actual = (ARC_VTG.sense - ARC_VTG.offset) * ARC_VTG.multiplier;
+//        waveform_RY[Acc] = ARC_VTG.actual;
+//        Acc++;
+//        if(Acc >= 200){
+//            Acc = 0;
+//        }
+//
+//        fft_input[fft_index++] = ARC_VTG.actual;
+//
+//        if(fft_index >= FFT_SIZE)
+//        {
+//            fft_index = 0;
+//            fft_ready = true;
+//        }
+//        if(Energy >= 75.0f){
+//
+//            arc_ctr++;
+//            if(arc_ctr > 10000){
+//                Arc = true;
+//                Trip_LED_ON;
+//            }
+//        }
+//    }
 
     AdcaRegs.ADCINTFLGCLR.bit.ADCINT1 = 1;          // Clear ADCINT1 flag
     // To receive more interrupts from this PIE group,
