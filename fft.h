@@ -59,12 +59,12 @@ typedef struct {
 /* ================= GLOBAL ARRAYS ================= */
 
 
-extern complex_t W[FFT_SIZE / 2];   /* Twiddle factors */
-extern float window[FFT_SIZE];      /* Window coefficients */
-extern complex_t x[FFT_SIZE];
-extern float magnitude[FFT_SIZE / 2];
-extern float max_magnitude[FFT_SIZE / 2];
-extern float fundamental_freq;
+//extern complex_t W[FFT_SIZE / 2];   /* Twiddle factors */
+//extern float window[FFT_SIZE];      /* Window coefficients */
+//extern complex_t x[FFT_SIZE];
+//extern float magnitude[FFT_SIZE / 2];
+//extern float max_magnitude[FFT_SIZE / 2];
+//extern float fundamental_freq;
 
 
 //extern float magnitude[FFT_SIZE / 2];

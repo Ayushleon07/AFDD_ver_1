@@ -1,6 +1,6 @@
 
 /**********************************************************************
-Code   : Main C file for Single Phase Single MPPT GTSI
+Code   : Main C file for AFDD
 Author : Ayush Dinkar
 **********************************************************************/
 #include <AFDD.h>    // Main include file
@@ -12,63 +12,10 @@ FFT_PARAMS fft_1;
 FFT_PARAMS fft_2;
 FFT_PARAMS fft_3;
 FFT_PARAMS fft_4;
-STATE_PARAMS currstate = test;
-//ac_parameters Rogowski_coil_1_vtg = {
-//          .sense = 0.0f,
-//          .offset = 1.65f,
-//          .multiplier = 1.0f,
-//          .sum = 0.0f,
-//          .actual = 0.0f
-//};
-//ac_parameters Rogowski_coil_2_vtg = {
-//          .sense = 0.0f,
-//          .offset = 1.65f,
-//          .multiplier = 1.0f,
-//          .sum = 0.0f,
-//          .actual = 0.0f
-//};
-//ac_parameters Rogowski_coil_3_vtg = {
-//          .sense = 0.0f,
-//          .offset = 1.65f,
-//          .multiplier = 1.0f,
-//          .sum = 0.0f,
-//          .actual = 0.0f
-//};
-//ac_parameters Rogowski_coil_4_vtg = {
-//          .sense = 0.0f,
-//          .offset = 1.65f,
-//          .multiplier = 1.0f,
-//          .sum = 0.0f,
-//          .actual = 0.0f
-//};
-//ac_parameters I1_out = {
-//          .sense = 0.0f,
-//          .offset = 1.65f,
-//          .multiplier = 1.0f,
-//          .sum = 0.0f,
-//          .actual = 0.0f
-//};
-//ac_parameters I2_out = {
-//          .sense = 0.0f,
-//          .offset = 1.65f,
-//          .multiplier = 1.0f,
-//          .sum = 0.0f,
-//          .actual = 0.0f
-//};
-//ac_parameters I3_out = {
-//          .sense = 0.0f,
-//          .offset = 1.65f,
-//          .multiplier = 1.0f,
-//          .sum = 0.0f,
-//          .actual = 0.0f
-//};
-//ac_parameters I4_out = {
-//          .sense = 0.0f,
-//          .offset = 1.65f,
-//          .multiplier = 1.0f,
-//          .sum = 0.0f,
-//          .actual = 0.0f
-//};
+STATE_PARAMS currstate = offset_calibration;
+complex_t fft_buffer[FFT_SIZE];
+bool fft_ready = false;
+
 ROGOWSKIS rogowski = {
       .R1 = {
           .sense = 0.0f,
@@ -135,11 +82,11 @@ SAMPLES state = rogo_1;
 //**********************************************************************
 //--- Global Variables---
 //**********************************************************************
-complex_t x[FFT_SIZE];
-float magnitude[FFT_SIZE / 2];
-float max_magnitude[FFT_SIZE / 2] = {0.0f};
-float ranged_magnitude[range];
-float fft_input[FFT_SIZE];
+//complex_t x[FFT_SIZE];
+//float magnitude[FFT_SIZE / 2];
+//float max_magnitude[FFT_SIZE / 2] = {0.0f};
+//float ranged_magnitude[range];
+//float fft_input[FFT_SIZE];
 //**********************************************************************
 //--- Test Variables---
 //**********************************************************************
@@ -148,7 +95,6 @@ float waveform_RY[200] = {0.0f};
 
 
 Uint16 fft_index = 0;
-bool fft_ready = false;
 float Energy = 0.0f;
 bool Reset = false;
 bool Arc = false;
@@ -215,30 +161,50 @@ void main(void)
 
     while(1){
 
-        if(fft_1.fft_ready){
-            apply_window(fft_1.fft_output, fft_1.fft_input);
-            bit_reversal(fft_1.fft_output);
-            fft_dit(fft_1.fft_output);
-            compute_magnitude(fft_1.fft_output, fft_1.fft_magnitude);
-            compute_range_magnitude(fft_1.fft_output, ranged_magnitude, 10000.0f, 20000.0f);
-        }
-        else if(fft_2.fft_ready){
-            apply_window(fft_2.fft_output, fft_2.fft_input);
-            bit_reversal(fft_2.fft_output);
-            fft_dit(fft_2.fft_output);
-            compute_magnitude(fft_2.fft_output, fft_2.fft_magnitude);
-        }
-        else if(fft_3.fft_ready){
-            apply_window(fft_3.fft_output, fft_3.fft_input);
-            bit_reversal(fft_3.fft_output);
-            fft_dit(fft_3.fft_output);
-            compute_magnitude(fft_3.fft_output, fft_3.fft_magnitude);
-        }
-        else if(fft_4.fft_ready){
-            apply_window(fft_4.fft_output, fft_4.fft_input);
-            bit_reversal(fft_4.fft_output);
-            fft_dit(fft_4.fft_output);
-            compute_magnitude(fft_4.fft_output, fft_4.fft_magnitude);
+        if(fft_ready){
+
+            /* Stop ADC sampling by disabling ePWM SOCA trigger */
+            EPwm1Regs.ETSEL.bit.SOCAEN = 0;
+
+            /*********************
+             * CHANNEL-1
+             *********************/
+            apply_window(fft_buffer, fft_1.fft_input);
+            bit_reversal(fft_buffer);
+            fft_dit(fft_buffer);
+            compute_magnitude(fft_buffer, fft_1.fft_magnitude);
+//            compute_range_magnitude(fft_buffer, ranged_magnitude, 10000.0f, 20000.0f);
+
+            /*********************
+             * CHANNEL-2
+             *********************/
+
+            apply_window(fft_buffer, fft_2.fft_input);
+            bit_reversal(fft_buffer);
+            fft_dit(fft_buffer);
+            compute_magnitude(fft_buffer, fft_2.fft_magnitude);
+
+            /*********************
+             * CHANNEL-3
+             *********************/
+
+            apply_window(fft_buffer, fft_3.fft_input);
+            bit_reversal(fft_buffer);
+            fft_dit(fft_buffer);
+            compute_magnitude(fft_buffer, fft_3.fft_magnitude);
+
+            /*********************
+             * CHANNEL-4
+             *********************/
+
+            apply_window(fft_buffer, fft_4.fft_input);
+            bit_reversal(fft_buffer);
+            fft_dit(fft_buffer);
+            compute_magnitude(fft_buffer, fft_4.fft_magnitude);
+
+            fft_ready = false;
+            /* Resume ADC sampling */
+            EPwm1Regs.ETSEL.bit.SOCAEN = 1;
         }
 
 

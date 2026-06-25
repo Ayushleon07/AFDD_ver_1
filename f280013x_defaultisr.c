@@ -370,85 +370,9 @@ interrupt void USER12_ISR(void)
 //    for(;;);
 }
 
-//
+
 // 1.1 - ADCA Interrupt 1
-//
-//void Reset_All_Variables(void)
-//{
-//    /* ================= State Counters ================= */
-//    volt_ok_ctr = 0;
-//    calib_ctr   = 0;
-//    trip_ctr    = 0;
-//
-//
-//    /* ================= Offset Calibration ================= */
-//    offset_caliberated = false;
-//    buck_dynamic_pi.burst_active = false;
-//    boost_dynamic_pi.burst_active = false;
-//
-//    BOOST_INPUT_CURRENT.sum    = 0.0f;
-//    BOOST_INPUT_CURRENT.offset = 0.0f;
-//
-//    BUCK_OUTPUT_CURRENT.sum    = 0.0f;
-//    BUCK_OUTPUT_CURRENT.offset = 0.0f;
-//
-//    RY_VOLTAGE.sum = 0.0f;
-//    RY_VOLTAGE.offset = 1.65f;
-//
-//    BY_VOLTAGE.sum = 0.0f;
-//    BY_VOLTAGE.offset = 1.65f;
-//
-//    R_CURRENT.sum = 0.0f;
-//    R_CURRENT.offset = 1.675f;
-//    B_CURRENT.sum = 0.0f;
-//    B_CURRENT.offset = 1.675f;
-//
-//
-//    /* ================= Boost PI ================= */
-//    Boost.outer_error      = 0.0f;
-//    Boost.outer_error_prev = 0.0f;
-//    Boost.inner_error      = 0.0f;
-//    Boost.inner_error_prev = 0.0f;
-//
-//    Boost.Iref             = 0.0f;
-//    Boost.Iref_prev        = 0.0f;
-//
-//    Boost.duty             = 0.0f;
-//    Boost.duty_prev        = 0.0f;
-//
-//    /* ================= Buck PI ================= */
-//    Buck.outer_error       = 0.0f;
-//    Buck.outer_error_prev  = 0.0f;
-//    Buck.inner_error       = 0.0f;
-//    Buck.inner_error_prev  = 0.0f;
-//
-//    Buck.Iref              = 0.0f;
-//    Buck.Iref_prev         = 0.0f;
-//
-//    Buck.duty              = 0.0f;
-//    Buck.duty_prev         = 0.0f;
-//
-//    /* ================= PWM ================= */
-//    EPwm1Regs.CMPA.bit.CMPA = 0;
-//    EPwm2Regs.CMPA.bit.CMPA = 0;
-//
-//    /* ================= Fault Latches ================= */
-//    fault_type.input_under_vtg_fault  = false;
-//    fault_type.input_over_vtg_fault   = false;
-//    fault_type.Vdc_2_over_vtg_fault   = false;
-//    fault_type.output_over_vtg_fault  = false;
-//    fault_type.output_over_curr_fault = false;
-//    fault_type.input_over_curr_fault  = false;
-//    fault_type.Hardware_trip_Boost_oc = false;
-//    fault_type.Hardware_trip_Boost_uc = false;
-//    fault_type.Hardware_trip_Buck_oc  = false;
-//    fault_type.Hardware_trip_Buck_uc  = false;
-//
-//
-//    buck_dynamic_pi.ref_hit = false;
-//    boost_dynamic_pi.ref_hit = false;
-//
-//}
+
 
 interrupt void ADCA1_ISR(void){
 
@@ -526,6 +450,7 @@ interrupt void ADCA1_ISR(void){
                 rogowski.R4.offset = rogowski.R4.sum / two_sec_cnt;
                 offset_calibrated = true;
                 ctr = 0;
+                currstate = controller_active;
             }
 
             break;
@@ -537,34 +462,31 @@ interrupt void ADCA1_ISR(void){
                     fft_1.fft_input[fft_1.fft_index++] = rogowski.R1.actual;
                     if(fft_1.fft_index >= FFT_SIZE){
                         fft_1.fft_index = 0;
-                        fft_1.fft_ready = true;
                     }
-                    break;
+//                    break;
                 }
                 case rogo_2:{
 
                     fft_2.fft_input[fft_2.fft_index++] = rogowski.R2.actual;
                     if(fft_2.fft_index >= FFT_SIZE){
                         fft_2.fft_index = 0;
-                        fft_2.fft_ready = true;
                     }
-                    break;
+//                    break;
                 }
                 case rogo_3:{
 
                     fft_3.fft_input[fft_3.fft_index++] = rogowski.R3.actual;
                     if(fft_3.fft_index >= FFT_SIZE){
                         fft_3.fft_index = 0;
-                        fft_3.fft_ready = true;
                     }
-                    break;
+//                    break;
                 }
                 case rogo_4:{
 
                     fft_4.fft_input[fft_4.fft_index++] = rogowski.R4.actual;
                     if(fft_4.fft_index >= FFT_SIZE){
                         fft_4.fft_index = 0;
-                        fft_4.fft_ready = true;
+                        fft_ready = true;
                     }
                     break;
                 }

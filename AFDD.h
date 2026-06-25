@@ -256,11 +256,16 @@ typedef struct{
     ac_parameters R4;
 }ROGOWSKIS;
 
+//typedef struct{
+//    Uint32 fft_index;
+//    float fft_input[FFT_SIZE];
+//    complex_t fft_output[FFT_SIZE];
+//    bool fft_ready;
+//    float fft_magnitude[FFT_SIZE / 2];
+//}FFT_PARAMS;
 typedef struct{
     Uint32 fft_index;
     float fft_input[FFT_SIZE];
-    complex_t fft_output[FFT_SIZE];
-    bool fft_ready;
     float fft_magnitude[FFT_SIZE / 2];
 }FFT_PARAMS;
 
@@ -278,37 +283,31 @@ typedef enum{
     rogo_4,
 }SAMPLES;
 
-//extern ac_parameters Rogowski_coil_1_vtg;
-//extern ac_parameters Rogowski_coil_2_vtg;
-//extern ac_parameters Rogowski_coil_3_vtg;
-//extern ac_parameters Rogowski_coil_4_vtg;
-//extern ac_parameters I1_out;
-//extern ac_parameters I2_out;
-//extern ac_parameters I3_out;
-//extern ac_parameters I4_out;
 extern CURRENTS current;
 extern ROGOWSKIS rogowski;
 extern FFT_PARAMS fft_1;
 extern FFT_PARAMS fft_2;
 extern FFT_PARAMS fft_3;
 extern FFT_PARAMS fft_4;
+extern complex_t fft_buffer[FFT_SIZE];
+extern bool fft_ready;
 extern STATE_PARAMS currstate;
 extern SAMPLES state;
 extern Uint32 ctr;
 extern bool offset_calibrated;
 
-
-extern Uint16 Acc;
-extern float waveform_ry[512];
-extern float waveform_RY[200];
-extern float fft_input[FFT_SIZE];
-extern Uint16 fft_index;
-extern bool fft_ready;
-extern float Energy;
-extern bool Reset;
-extern float ranged_magnitude[range];
-extern bool Arc;
-extern Uint32 arc_ctr;
+//
+//extern Uint16 Acc;
+//extern float waveform_ry[512];
+//extern float waveform_RY[200];
+//extern float fft_input[FFT_SIZE];
+//extern Uint16 fft_index;
+//extern bool fft_ready;
+//extern float Energy;
+//extern bool Reset;
+//extern float ranged_magnitude[range];
+//extern bool Arc;
+//extern Uint32 arc_ctr;
 extern float Max_energy;
 
 

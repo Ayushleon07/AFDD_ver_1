@@ -119,14 +119,14 @@ void compute_magnitude(complex_t *x, float *mag)
             x[i].real * x[i].real +
             x[i].imag * x[i].imag
         );
-        if(Reset){
-            max_magnitude[i] = 0.0f;
-        }
-        else{
-            if(mag[i] > max_magnitude[i]){
-                max_magnitude[i] = mag[i];
-            }
-        }
+//        if(Reset){
+//            max_magnitude[i] = 0.0f;
+//        }
+//        else{
+//            if(mag[i] > max_magnitude[i]){
+//                max_magnitude[i] = mag[i];
+//            }
+//        }
     }
 }
 float find_fundamental(float *mag)
